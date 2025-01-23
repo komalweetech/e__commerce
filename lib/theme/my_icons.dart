@@ -11,9 +11,11 @@ class MyIcons {
   static const String emailIcon = "assets/icons/email.png";
   static const String numberIcon = "assets/icons/phone.png";
 
-  static const String facebook = "assets/images/auth/facebook.svg";
-  static const String instagram = "assets/images/auth/instagram.svg";
-  static const String youtube = "assets/images/auth/youtube.svg";
+  static const String facebook = "assets/images/auth/facebook.png";
+  static const String google = "assets/images/auth/google.png";
+
+  // base screen
+ static const String banner = "assets/images/banner.jpg";
 
 
 

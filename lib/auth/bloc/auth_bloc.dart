@@ -40,17 +40,28 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<LoginEvent>((event, emit) async {
       emit(AuthLoading());
       try {
-        final UserCredential userCredential = await _firebaseAuth.signInWithEmailAndPassword(
-            email: event.email, password: event.password);
+        final UserCredential userCredential = 
+            await _firebaseAuth.signInWithEmailAndPassword(
+          email: event.email,
+          password: event.password,
+        );
 
         final String? uid = userCredential.user?.uid;
-
-// Save UID in SharedPreferences
-        if(uid != null) {
+        if (uid != null) {
           final prefs = await SharedPreferences.getInstance();
           await prefs.setString('uid', uid);
         }
         emit(AuthAuthenticated());
+      } on FirebaseAuthException catch (e) {
+        String message = 'An error occurred';
+        if (e.code == 'user-not-found') {
+          message = 'No user found for that email';
+        } else if (e.code == 'wrong-password') {
+          message = 'Wrong password provided';
+        } else if (e.code == 'invalid-email') {
+          message = 'Please provide a valid email';
+        }
+        emit(AuthFailure(message));
       } catch (e) {
         emit(AuthFailure(e.toString()));
       }
@@ -60,16 +71,31 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<SignUpEvent>((event, emit) async {
       emit(AuthLoading());
       try {
-      final UserCredential userCredential  = await _firebaseAuth.createUserWithEmailAndPassword(
-            email: event.email, password: event.password);
-      final String? uid = userCredential.user?.uid;
+        // Create user with email and password
+        final UserCredential userCredential = 
+            await _firebaseAuth.createUserWithEmailAndPassword(
+          email: event.email,
+          password: event.password,
+        );
 
-      // Save UID in SharedPreferences
-      if(uid != null){
+        // Update user profile with name
+        await userCredential.user?.updateDisplayName(event.name);
+
+        // Save user data to SharedPreferences
         final prefs = await SharedPreferences.getInstance();
-        await prefs.setString('uid', uid);
-      }
+        await prefs.setString('uid', userCredential.user!.uid);
+
         emit(AuthAuthenticated());
+      } on FirebaseAuthException catch (e) {
+        String message = 'An error occurred';
+        if (e.code == 'weak-password') {
+          message = 'The password provided is too weak';
+        } else if (e.code == 'email-already-in-use') {
+          message = 'An account already exists for that email';
+        } else if (e.code == 'invalid-email') {
+          message = 'Please provide a valid email';
+        }
+        emit(AuthFailure(message));
       } catch (e) {
         emit(AuthFailure(e.toString()));
       }
@@ -85,6 +111,27 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         final prefs = await SharedPreferences.getInstance();
         await prefs.remove('uid');
         emit(AuthAuthenticated());
+      } catch (e) {
+        emit(AuthFailure(e.toString()));
+      }
+    });
+
+    // for forgot password state..
+    on<ForgotPasswordEvent>((event, emit) async {
+      emit(AuthLoading());
+      try {
+        await _firebaseAuth.sendPasswordResetEmail(
+          email: event.email,
+        );
+        emit(PasswordResetEmailSent());
+      } on FirebaseAuthException catch (e) {
+        String message = 'An error occurred';
+        if (e.code == 'user-not-found') {
+          message = 'No user found for that email';
+        } else if (e.code == 'invalid-email') {
+          message = 'Please provide a valid email';
+        }
+        emit(AuthFailure(message));
       } catch (e) {
         emit(AuthFailure(e.toString()));
       }

@@ -13,8 +13,9 @@ class LoginEvent extends AuthEvent {
 class SignUpEvent extends AuthEvent {
   final String email;
   final String password;
+  final String name;
 
-  SignUpEvent(this.email, this.password);
+  SignUpEvent({required this.email, required this.password, required this.name});
 }
 
 class LogoutEvent extends AuthEvent {}
@@ -27,3 +28,9 @@ abstract class SplashEvent{}
 class NavigateToLoginEvent extends SplashEvent {}
 
 class NavigateToDashboardEvent extends SplashEvent {}
+
+class ForgotPasswordEvent extends AuthEvent {
+  final String email;
+
+  ForgotPasswordEvent(this.email);
+}

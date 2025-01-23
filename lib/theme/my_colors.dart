@@ -7,7 +7,8 @@ class MyColors {
   static const Color whiteBG = Color(0xffF9FAFB);
   static const Color textFieldBG = Color(0xffFFFFFF);
   static const Color textFieldHint = Color(0xffA8AFB9);
-  static const Color mainColor = Color(0xffFF5C00);
+  static const Color primaryColor = Color(0xffDB3022);
+  static const Color secondPrimary = Color(0xffF3574A);
 
   // Gradients
   static const LinearGradient gradientBG = LinearGradient(

@@ -5,6 +5,7 @@ import 'package:lottie/lottie.dart';
 
 import 'auth/bloc/auth_bloc.dart';
 
+
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
 
@@ -14,9 +15,9 @@ class SplashScreen extends StatelessWidget {
       create: (context) => SplashBloc(),
       child: BlocListener<SplashBloc, SplashState>(
         listener: (context, state) {
-          if(state is NavigateToLoginState) {
+          if (state is NavigateToLoginState) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
-              Navigator.pushReplacementNamed(context, 'login');
+              Navigator.pushReplacementNamed(context, 'signUp');
             });
           } else {
             WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -27,14 +28,17 @@ class SplashScreen extends StatelessWidget {
         child: Scaffold(
           backgroundColor: Colors.white,
           body: Center(
-              child: Lottie.asset(MyIcons.splash),
+            child: Lottie.asset(
+              MyIcons.splash,
+              width: 300,
+              height: 300,
+              fit: BoxFit.contain,
+            ),
           ),
         ),
         // Scaffold(
         //   body: SizedBox.expand(child: Image.asset('assets/images/splash2.jpg',f),),
         // )
-
-
       ),
     );
   }

@@ -27,7 +27,7 @@ class CommonTextField extends StatelessWidget {
         height: 60,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: MyColors.mainColor.withOpacity(0.5)),
+          border: Border.all(color: MyColors.primaryColor.withOpacity(0.5)),
           color:  MyColors.textFieldBG, // Example background color
         ),
         child: Center(

@@ -28,3 +28,5 @@ sealed class AuthState {}
  AuthFailure(this.message);
 }
 
+class PasswordResetEmailSent extends AuthState {}
+
